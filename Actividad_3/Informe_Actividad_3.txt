@@ -1,0 +1,27 @@
+INFORME - ACTIVIDAD 3: Grafico de frecuencias con matplotlib
+
+Enlace al repositorio de GitHub (carpeta Actividad_3): https://github.com/agustinabuffo08-cpu/duct-2026-actividades/upload/main/Actividad_3
+
+Linea completada en el script (comprension de listas):
+    palabras = [par[0] for par in top10]
+    valores = [par[1] for par in top10]
+
+1. Por que el grafico usa palabras[::-1] y valores[::-1]
+
+plt.barh() dibuja la primera barra en la parte inferior del eje vertical. Como top10 esta ordenada de mayor a menor, sin invertir las listas la palabra mas frecuente ("libro", 37 apariciones) queda al pie del grafico y la menos frecuente ("numero", 5) arriba. Al probar el codigo sin [::-1] se obtiene el orden invertido. El slicing [::-1] da vuelta ambas listas y asi la barra mas larga queda arriba, que es la forma habitual de leer un ranking.
+
+2. Que pasa con top_n=20
+
+El grafico sigue siendo legible: con la figura de 10x6 pulgadas caben las 20 etiquetas, aunque las barras quedan mas finas y mas juntas. Esto funciona porque las etiquetas son palabras cortas. Con valores bastante mayores (30 o 40) habria que aumentar el alto de la figura (figsize) o las etiquetas se superpondrian. Ademas, del puesto 10 al 20 casi todas las palabras tienen la misma frecuencia (5 apariciones hasta el puesto 16, y 4 del 17 al 20), por lo que las barras tienen la misma longitud y aportan poca informacion sobre el orden entre ellas.
+
+3. Por que plt.barh() y no plt.bar()
+
+Porque las etiquetas son palabras. En barras verticales las palabras van en el eje horizontal y, si son muchas o largas, se superponen o hay que rotarlas. Con barras horizontales cada palabra tiene su propia fila y se lee en posicion normal. Ademas, el formato horizontal comunica mejor un ranking de categorias ordenadas y escala mejor al aumentar top_n.
+
+Observacion sobre el resultado
+
+En una primera version el script contaba todas las palabras, y las 10 mas frecuentes eran palabras vacias (de, que, la, el, los, y, en, es, un, las). Por eso se agrego la funcion tokenizar() para quitar los signos de puntuacion y se filtraron las stopwords, como en la Secuencia B de la Clase 2. Se partio de la lista STOP_WORDS del ejercicio 2, pero con ella seguian apareciendo en el top 10 palabras como "o", "pero", "cada" y "hay", asi que se amplio la lista con otras palabras vacias frecuentes del español.
+
+Tambien se agrego el diccionario NORMALIZAR para contar juntas las formas de una misma palabra: "libros" se cuenta como "libro", "hexagonos" como "hexagono" y "hombres" como "hombre". Antes "libros" (20) y "libro" (17) aparecian como dos barras separadas; ahora suman 37 y "libro" pasa a ser la palabra mas frecuente. Lo mismo ocurre con hexagono (13 + 5 = 18) y hombre (10 + 5 = 15).
+
+Con estos cambios, el grafico muestra palabras con contenido: libro (37), biblioteca (27), hexagono (18), hombre (15), letras (8), anaqueles (7), universo (6), bibliotecario (6), simbolos (6) y numero (5). Ahora el grafico refleja el tema del texto: una biblioteca formada por hexagonos y anaqueles llenos de libros.
