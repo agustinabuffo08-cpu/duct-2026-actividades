@@ -1,6 +1,6 @@
 INFORME - ACTIVIDAD 3: Grafico de frecuencias con matplotlib
 
-Enlace al repositorio de GitHub (carpeta Actividad_3): https://github.com/agustinabuffo08-cpu/duct-2026-actividades/upload/main/Actividad_3
+Enlace al repositorio de GitHub (carpeta Actividad_3): https://github.com/agustinabuffo08-cpu/duct-2026-actividades/tree/main/Actividad_3
 
 Linea completada en el script (comprension de listas):
     palabras = [par[0] for par in top10]
