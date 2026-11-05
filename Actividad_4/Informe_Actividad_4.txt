@@ -1,0 +1,43 @@
+INFORME - ACTIVIDAD 4: Pruebas automáticas con pytest
+
+Enlace al repositorio de GitHub (carpeta Actividad_4): https://github.com/agustinabuffo08-cpu/duct-2026-actividades/tree/main/Actividad_4
+
+Aserción completada en test_frecuencias_mayusculas:
+    assert resultado == {"sol": 3}
+
+Al ejecutar pytest en la carpeta Actividad_4 con las tres pruebas originales se obtiene "3 passed". Con la cuarta prueba agregada, "4 passed".
+
+1. ¿Qué pasaría con test_frecuencias_mayusculas si en analizador.py sacaras el .lower()?
+
+La prueba falla. Lo probé con una copia de analizador.py en la que cambié texto.lower().split() por texto.split(), sin modificar el archivo original. pytest muestra "1 failed, 2 passed": las pruebas básica y de texto vacío siguen pasando, porque usan solo minúsculas, y falla test_frecuencias_mayusculas con este mensaje:
+
+    AssertionError: assert {'Sol': 1, 'sol': 1, 'SOL': 1} == {'sol': 3}
+      Differing items:
+      {'sol': 1} != {'sol': 3}
+      Left contains 2 more items:
+      {'SOL': 1, 'Sol': 1}
+
+Sin .lower(), Python distingue mayúsculas de minúsculas, así que "Sol", "sol" y "SOL" son tres palabras distintas y cada una se cuenta una vez. pytest muestra qué devolvió la función (a la izquierda), qué se esperaba (a la derecha) y en qué se diferencian: "sol" vale 1 en lugar de 3, y sobran las claves "Sol" y "SOL". Así se ve enseguida cuál es el problema, sin tener que revisar el código a mano.
+
+2. ¿Por qué contar_frecuencias recibe un string directamente en vez de una ruta de archivo? ¿Qué ventaja tiene para escribir pruebas?
+
+En la Clase 2 la función abría y leía el archivo ella misma, así que para probarla había que crear un archivo de texto con el contenido exacto de cada caso. Al recibir el texto directamente, la función solo cuenta palabras, y leer el archivo pasa a ser tarea de otra parte del programa.
+
+Ventajas para las pruebas:
+- Cada caso se escribe en una sola línea, con el texto a la vista dentro de la prueba: contar_frecuencias("sol luna sol"). Se lee claramente qué entra y qué debería salir.
+- No hace falta crear, guardar ni borrar archivos, y la prueba no depende de la carpeta desde la que se ejecuta pytest ni de que texto.txt exista.
+- Probar casos de borde es fácil: un texto vacío es simplemente "", sin necesidad de un archivo vacío.
+- Si una prueba falla, el error está en la lógica de contar y no en problemas de lectura del archivo (ruta equivocada, codificación, etc.).
+
+3. Otro caso de borde: texto con espacios de más (cuarta prueba)
+
+Elegí probar un texto con espacios al principio y al final, varios espacios seguidos entre palabras, una tabulación (\t) y saltos de línea (\n). Si la función separara mal las palabras, podrían aparecer palabras vacías ("") en el diccionario o conteos incorrectos. La prueba agregada es:
+
+    def test_frecuencias_espacios_de_mas():
+        resultado = contar_frecuencias("   sol    luna \t sol\n\nluna  sol   ")
+        assert resultado == {"sol": 3, "luna": 2}
+        assert "" not in resultado
+
+La prueba pasa, porque .split() sin argumentos corta el texto por cualquier cantidad de espacios, tabulaciones o saltos de línea, y descarta los que quedan al principio y al final.
+
+Otro caso de borde que encontré son los signos de puntuación. contar_frecuencias("Sol, luna y sol.") devuelve {'sol,': 1, 'luna': 1, 'y': 1, 'sol.': 1}: como .split() no quita la puntuación, "sol," y "sol." se cuentan como palabras distintas y no como "sol": 2. No lo agregué como prueba porque fallaría con la función actual, y la consigna pide entregar analizador.py sin modificar. Si más adelante se agrega a la función algo como tokenizar() del ejercicio 2 de la Clase 2, convendría sumar esa prueba para comprobar que la puntuación se quita bien.
