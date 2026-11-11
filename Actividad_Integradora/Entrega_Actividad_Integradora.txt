@@ -1,0 +1,5 @@
+ACTIVIDAD INTEGRADORA - Modulo 4
+
+Enlace a la carpeta en GitHub: https://github.com/agustinabuffo08-cpu/duct-2026-actividades/tree/main/Actividad_Integradora
+
+Archivos en la carpeta: analizador.py, test_analizador.py, README.md, requirements.txt y texto_integradora.txt.
